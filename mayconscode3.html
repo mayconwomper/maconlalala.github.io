@@ -167,30 +167,39 @@ const Name = document.querySelector("#Name")
 const Email = document.querySelector("#Email")
 document.querySelector('#submit').addEventListener('click', Submit)
 const quantities = document.querySelectorAll(".quantities")
+
 const itemsList = ["chicken alfredo pasta", "spaghetti and meatballs", "Chocolate Pasta"]
+const prices = document.querySelectorAll(".price")
+	
 	
 	function Submit() {
 	  const timestamp = buildTimestamp()
-		
+	let total = 0	
 	  let cart = { }
 		
 	  for  (let i=0; i<quantities.length; i=i+1) {
 	  	if (quantities[i].value != "0" && quantities[i].value != "") {	
+			  let price = prices[i].innerHTML.replace('$', '')
+			  total = total + quantities[i].value * price 
 	  		cart[itemsList[i]] = parseInt(quantities[i].value) 
 	  	}
 	  	quantities[i].value = ""
 	  }
 		
-	  
-	  set(ref(db, timestamp), {
+	  //console.log(cart)
+		
+	  set(ref(db, timestamp),	{
 		  Name: Name.value,
 	      email: Email.value,
-			cart: cart.value
+			cart: cart,
+totalPrice: total,
+		  paid: "not yet",
 	  });
 
 	  Name.value = ""
 	  Email.value = ""
 	}
+	
 	function buildTimestamp() {
 	  const now = new Date();
 	  let timestamp = now.getFullYear().toString() + "/";
